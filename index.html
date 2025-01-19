@@ -31,11 +31,27 @@
     #play-button:hover {
       background-color: grey;
     }
+    #mobile-warning {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: black;
+      color: white;
+      font-size: 18px;
+      z-index: 10;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
   <p style="font-family:cursive; color:red; position:-50y;">armen acer</p>
   <button id="play-button" onclick="document.getElementById('background-music').play();">Start</button>
+
+  <!-- Mobile warning message -->
+  <div id="mobile-warning">For the best experience, please switch to desktop mode.</div>
 
   <!-- Add audio tag for music -->
   <audio id="background-music" loop>
@@ -46,26 +62,13 @@
   <canvas id="heart"></canvas>
 
   <script>
-    window.requestAnimationFrame =
-      window.__requestAnimationFrame ||
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      (function () {
-        return function (callback, element) {
-          var lastTime = element.__lastTime || 0;
-          var currTime = Date.now();
-          var timeToCall = Math.max(1, 33 - (currTime - lastTime));
-          window.setTimeout(callback, timeToCall);
-          element.__lastTime = currTime + timeToCall;
-        };
-      })();
-
     window.isDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
       (navigator.userAgent || navigator.vendor || window.opera).toLowerCase()
     );
+
+    if (window.isDevice) {
+      document.getElementById('mobile-warning').style.display = 'block';
+    }
 
     var loaded = false;
 
