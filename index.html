@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>❤️</title>
+  <title>It's not about me</title>
   <style>
     canvas {
       position: absolute;
@@ -13,13 +13,33 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.2);
+      z-index: -1; /* Make sure the canvas is behind the button */
+    }
+    #play-button {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 1; /* Ensure button is on top of the canvas */
+    }
+    #play-button:hover {
+      background-color: grey;
     }
   </style>
 </head>
 <body>
+  <p style="font-family:cursive; color:red; position:-50y;">armen acer</p>
+  <button id="play-button" onclick="document.getElementById('background-music').play();">Start</button>
+
   <!-- Add audio tag for music -->
-  <audio id="background-music" autoplay loop>
-    <source src="About You.mp3" type="audio/mp3">
+  <audio id="background-music" loop>
+    <source src="AboutU.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
 
@@ -96,12 +116,11 @@
       var traceCount = mobile ? 20 : 50;
       var pointsOrigin = [];
       var dr = mobile ? 0.3 : 0.1;
+      var heartSize = Math.min(width, height) * 0.7; // 70% of the smaller screen dimension
+
+      // Modify these lines to use 70% of the screen size for the heart
       for (var i = 0; i < Math.PI * 2; i += dr)
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 310, 19, 0, 0)); 
-      for (var i = 0; i < Math.PI * 2; i += dr)
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 250, 15, 0, 0)); 
-      for (var i = 0; i < Math.PI * 2; i += dr)
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 190, 11, 0, 0)); 
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), heartSize, heartSize * 0.06, 0, 0)); 
 
       var heartPointsCount = pointsOrigin.length;
       var targetPoints = [];
@@ -186,8 +205,11 @@
     };
 
     var s = document.readyState;
-    if (s === "complete" || s === "loaded" || s === "interactive") init();
-    else document.addEventListener("DOMContentLoaded", init);
+    if (s === "complete" || s === "loaded" || s === "interactive") {
+      var audio = document.getElementById("background-music");
+      audio.play(); // Try playing the audio once the page is ready
+      init();
+    } else document.addEventListener("DOMContentLoaded", init);
   </script>
 </body>
 </html>
