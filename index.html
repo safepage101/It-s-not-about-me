@@ -13,7 +13,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.2);
-      z-index: -1; /* Make sure the canvas is behind the button */
+      z-index: -1;
     }
     #play-button {
       position: absolute;
@@ -52,13 +52,11 @@
 </head>
 <body>
   <p style="font-family:cursive; color:white;">armen acer</p>
-  <p style="font-size:40px; color:white;">Heart_current_state:Normal</p>
-  <button id="play-button" onclick="document.getElementById('background-music').play();">Start</button>
+  <p id="heart-state" style="font-size:40px; color:white;">Heart_current_state:Normal</p>
+  <button id="play-button" onclick="startHeartAnimation()">Start</button>
 
-  <!-- Mobile warning message -->
   <div id="mobile-warning">Please use your mobile chrome browser and turn on desktop site to view the content 😌</div>
 
-  <!-- Add audio tag for music -->
   <audio id="background-music" loop>
     <source src="AboutU.mp3" type="audio/mp3">
     Your browser does not support the audio element.
@@ -76,6 +74,8 @@
     }
 
     var loaded = false;
+    var heartState = "Normal"; // Initial heart state
+    var e = []; // Declare the particles array globally
 
     var init = function () {
       if (loaded) return;
@@ -124,9 +124,8 @@
       var traceCount = mobile ? 20 : 50;
       var pointsOrigin = [];
       var dr = mobile ? 0.3 : 0.1;
-      var heartSize = Math.min(width, height) * 0.5; // 70% of the smaller screen dimension
+      var heartSize = Math.min(width, height) * 0.5; 
 
-      // Modify these lines to use 70% of the screen size for the heart
       for (var i = 0; i < Math.PI * 2; i += dr)
         pointsOrigin.push(scaleAndTranslate(heartPosition(i), heartSize, heartSize * 0.06, 0, 0)); 
 
@@ -142,7 +141,6 @@
         }
       };
 
-      var e = [];
       for (var i = 0; i < heartPointsCount; i++) {
         var x = rand() * width;
         var y = rand() * height;
@@ -215,9 +213,23 @@
     var s = document.readyState;
     if (s === "complete" || s === "loaded" || s === "interactive") {
       var audio = document.getElementById("background-music");
-      audio.play(); // Try playing the audio once the page is ready
+      audio.play();
       init();
     } else document.addEventListener("DOMContentLoaded", init);
+
+    // Update the heart state and animation speed on start button click
+    function startHeartAnimation() {
+      document.getElementById('heart-state').textContent = "Heart_current_state: Anxious";
+      var audio = document.getElementById("background-music");
+      audio.play();
+      heartState = "Anxious";
+      // Increase animation intensity and change color to red for more chaos
+      e.forEach(function (particle) {
+        particle.speed = Math.random() * 10 + 8; // Increase speed for more chaos
+        particle.force = 0.5; // Change force for violent movement
+        particle.f = "red"; // Change color to red
+      });
+    }
   </script>
 </body>
 </html>
