@@ -27,8 +27,6 @@
       border: none;
       cursor: pointer;
       z-index: 1;
-      width:20px;
-      height:auto;
     }
     #play-button:hover {
       background-color: grey;
@@ -45,8 +43,6 @@
       font-size: 18px;
       z-index: 10;
       border-radius: 10px;
-      height:100%;
-      width:100%;
     }
   </style>
 </head>
@@ -74,8 +70,10 @@
     }
 
     var loaded = false;
-    var heartState = "Normal"; // Initial heart state
-    var e = []; // Declare the particles array globally
+    var heartState = "Normal";
+    var e = []; 
+    var heartPointsCount;
+    var traceCount;
 
     var init = function () {
       if (loaded) return;
@@ -90,13 +88,6 @@
 
       ctx.fillStyle = "rgba(0,0,0,1)";
       ctx.fillRect(0, 0, width, height);
-
-      var drawText = function () {
-        ctx.font = "60px Arial"; 
-        ctx.fillStyle = "blue";
-        ctx.textAlign = "center";
-        ctx.fillText("", width / 2, height / 2.2 + 400); 
-      };
 
       var heartPosition = function (rad) {
         return [
@@ -121,15 +112,15 @@
         ctx.fillRect(0, 0, width, height);
       });
 
-      var traceCount = mobile ? 20 : 50;
+      traceCount = mobile ? 20 : 50;
       var pointsOrigin = [];
       var dr = mobile ? 0.3 : 0.1;
-      var heartSize = Math.min(width, height) * 0.5; 
+      var heartSize = Math.min(width, height) * 0.5;
 
       for (var i = 0; i < Math.PI * 2; i += dr)
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), heartSize, heartSize * 0.06, 0, 0)); 
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), heartSize, heartSize * 0.06, 0, 0));
 
-      var heartPointsCount = pointsOrigin.length;
+      heartPointsCount = pointsOrigin.length;
       var targetPoints = [];
 
       var pulse = function (kx, ky) {
@@ -203,12 +194,41 @@
           u.trace.forEach((t) => ctx.fillRect(t.x, t.y, 1, 1));
         }
 
-        drawText();
         window.requestAnimationFrame(loop, canvas);
       };
 
       loop();
     };
+
+    function startHeartAnimation() {
+      document.getElementById('heart-state').textContent = "Heart_current_state: Anxious";
+      var audio = document.getElementById("background-music");
+      audio.play();
+      heartState = "Anxious";
+
+      e.forEach(function (particle) {
+        particle.speed = Math.random() * 10 + 8;
+        particle.force = 0.5;
+        particle.f = "red";
+      });
+
+      var additionalParticles = 50; 
+      for (var i = 0; i < additionalParticles; i++) {
+        var x = Math.random() * innerWidth;
+        var y = Math.random() * innerHeight;
+        e.push({
+          vx: 0,
+          vy: 0,
+          R: 2,
+          speed: Math.random() * 10 + 4,
+          q: ~~(Math.random() * heartPointsCount),
+          D: 2 * (i % 2) - 1,
+          force: 0.2 * Math.random() + 0.7,
+          f: "red",
+          trace: Array.from({ length: traceCount }, () => ({ x, y })),
+        });
+      }
+    }
 
     var s = document.readyState;
     if (s === "complete" || s === "loaded" || s === "interactive") {
@@ -216,35 +236,6 @@
       audio.play();
       init();
     } else document.addEventListener("DOMContentLoaded", init);
-
-    // Update the heart state and animation speed on start button click
-    function startHeartAnimation() {
-      document.getElementById('heart-state').textContent = "Heart_current_state: Anxious";
-      var audio = document.getElementById("background-music");
-      audio.play();
-      heartState = "Anxious";
-      // Increase animation intensity and change color to red for more chaos
-      e.forEach(function (particle) {
-        particle.speed = Math.random() * 10 + 20; // Increase speed for more chaos
-        particle.force = 0.5; // Change force for violent movement
-        particle.f = "violet"; // Change color to red
-        // Add more particles dynamically
-      var additionalParticles = 50; // Number of new particles to add
-      for (var i = 0; i < additionalParticles; i++) {
-       var x = Math.random() * innerWidth;
-       var y = Math.random() * innerHeight;
-       e.push({
-       vx: 0,
-       vy: 0,
-       R: 2,
-       speed: Math.random() * 10 + 4,
-       q: ~~(Math.random() * heartPointsCount),
-       D: 2 * (i % 2) - 1,
-       force: 0.2 * Math.random() + 0.7,
-       f: "red",
-       trace: Array.from({ length: traceCount }, () => ({ x, y })),
-      });
-    }
   </script>
 </body>
 </html>
