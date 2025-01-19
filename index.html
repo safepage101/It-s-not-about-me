@@ -228,6 +228,21 @@
         particle.speed = Math.random() * 10 + 20; // Increase speed for more chaos
         particle.force = 0.5; // Change force for violent movement
         particle.f = "violet"; // Change color to red
+        // Add more particles dynamically
+      var additionalParticles = 50; // Number of new particles to add
+      for (var i = 0; i < additionalParticles; i++) {
+      var x = Math.random() * innerWidth;
+      var y = Math.random() * innerHeight;
+      e.push({
+       vx: 0,
+       vy: 0,
+       R: 2,
+       speed: Math.random() * 10 + 4,
+       q: ~~(Math.random() * heartPointsCount),
+       D: 2 * (i % 2) - 1,
+       force: 0.2 * Math.random() + 0.7,
+       f: "red",
+       trace: Array.from({ length: traceCount }, () => ({ x, y })),
       });
     }
   </script>
