@@ -50,12 +50,15 @@
       height:100%;
       width:100%;
     }
+    #cat_img{
+      visibility:hidden;
+    }
   </style>
 </head>
 <body>
   <p style="font-family:cursive; color:white;">armen acer</p>
   <p id="heart-state" style="font-size:40px; color:white;">Heart_current_state:Normal</p>
-  <img src="cat.gif" style=" top:80%;"></img>
+  <img src="cat.gif" id=cat-img""></img>
   <button id="play-button" onclick="startHeartAnimation()">Start</button>
 
   <div id="mobile-warning">Please use your mobile chrome browser and turn on desktop site to view the content 😌</div>
@@ -232,6 +235,9 @@
         particle.force = 0.5; // Change force for violent movement
         particle.f = "red"; // Change color to red
       });
+      // Show the image
+       const image = document.getElementById('cat_img');
+       image.style.visibility = 'visible';
     }
   </script>
 </body>
